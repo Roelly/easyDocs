@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "back-end service for easyDocs",
+  "main": "Server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roelly/easyDocs.git"
+  },
+  "keywords": [
+    "easyDocs"
+  ],
+  "author": "Roelly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Roelly/easyDocs/issues"
+  },
+  "homepage": "https://github.com/Roelly/easyDocs#readme"
+}
