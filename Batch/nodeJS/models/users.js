@@ -23,19 +23,17 @@ userSchema.methods.compare = function(password){
     return bcrypt.compare(password, user.password);
 }
 
-userSchema.methods.validateUser = function(user){
+const User = mongoose.model('users',userSchema);
+
+const validateUser = (user) => {
     const schema = {
-        firstName:  Joi.required().min(4).String(),
-        lastName:   Joi.required().min(4).String(),
-        email:      Joi.required().min(11).email(),
-        password:   Joi.required().min(8).String(),
+        firstName: Joi.string().required().min(3),
+        lastName: Joi.string().required().min(3),
+        email: Joi.string().required().min(11).email(),
+        password: Joi.string().required().min(8)
     };
-    
     return Joi.validate(user,schema);
 }
 
-const User = mongoose.model('users',userSchema);
-
-
-
 exports.User = User;
+exports.validateUser = validateUser;

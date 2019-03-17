@@ -18,5 +18,18 @@
   "bugs": {
     "url": "https://github.com/Roelly/easyDocs/issues"
   },
-  "homepage": "https://github.com/Roelly/easyDocs#readme"
+  "homepage": "https://github.com/Roelly/easyDocs#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "config": "^3.0.1",
+    "express": "^4.16.4",
+    "express-async-errors": "^3.1.1",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.19",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "jest": "^24.5.0"
+  }
 }
