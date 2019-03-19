@@ -1,0 +1,4 @@
+{
+    "db": "mongodb://localhost/batch_test",
+    "jwt": "batchsupport1"
+}

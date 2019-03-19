@@ -1,9 +1,7 @@
-require('express-async-errors');    // to avoid try - catch blocks on async functions
-
+require('express-async-errors');
 const express = require('express');
 
 const sign = require('../routes/sign');
-const auth = require('../routes/auth');
 const docs = require('../routes/docs');
 const msgs = require('../routes/msgs');
 const plan = require('../routes/plan');
@@ -17,7 +15,6 @@ module.exports = function(app){
     app.use(express.json());
 
     app.use('/api/sign', sign);
-    app.use('/api/auth', auth);
     app.use('/api/docs', docs);
     app.use('/api/msgs', msgs);
     app.use('/api/plan', plan);

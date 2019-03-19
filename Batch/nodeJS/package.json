@@ -4,7 +4,7 @@
   "description": "back-end service for easyDocs",
   "main": "Server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watchAll --verbose --runInBand"
   },
   "repository": {
     "type": "git",
@@ -26,10 +26,10 @@
     "express-async-errors": "^3.1.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.0",
-    "mongoose": "^5.4.19",
-    "winston": "^3.2.1"
+    "mongoose": "^5.4.19"
   },
   "devDependencies": {
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "supertest": "^4.0.2"
   }
 }
