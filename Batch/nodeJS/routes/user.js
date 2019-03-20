@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 const { User, validateUser } = require('../models/users');
 
 
-router.get('/', auth,  async (req,res) => {
+router.get('/', auth, async (req,res) => {
     const users = await User.find();
     if(!users) return res.status(404).send('No user found');
     res.send(users);
