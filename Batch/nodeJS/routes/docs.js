@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const _ = require('lodash');
 
 /****MIDDLEWARE****/
 const auth = require('../middleware/auth');
@@ -17,7 +18,7 @@ router.get('/', auth, async (req,res) => { //continue here...
     res.status(200).send(docs);
 });
 
-router.get('/:id', validateObjId, async (req,res) => {
+router.get('/:id', [auth, validateObjId], async (req,res) => {
     const doc = await Document.findById(req.params.id);
     if(!doc) return res.status(404).send('Document was not found');
 
@@ -41,22 +42,11 @@ router.post('/', auth, async (req,res) => {
     const doc = new Document({
         title: req.body.title,
         body: req.body.body,
-        type: {
-            _id: type._id,
-            name: type.name
-        },
-        client: {
-            _id: client._id,
-            name: client.name
-        },
-        user: {
-            _id: user._id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email
-        }
+        type: _.pick(client, ['_id','name']),
+        client: _.pick(client,['_id','name']),
+        user: _.pick(user,['_id','firstName','lastName','email'])
     });
-
+    console.log(doc);
     await doc.save();
 
     res.status(200).send(doc);

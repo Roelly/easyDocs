@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const _ = require('lodash');
 
 const auth = require('../middleware/auth');
 
@@ -17,12 +18,7 @@ router.post('/', auth, async (req,res) => {
 
     if(error) return res.status(400).send(error.details[0].message); // -issue- skipped due to catching up error.middleware : UPDATE - the error was caused by "await"
     
-    const user = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: req.body.password
-    });
+    const user = new User(_.pick(req.body, ['firstName','lastName','email','password']));
             
     user.password = await user.hash(user.password);
     await user.save();
