@@ -4,6 +4,12 @@ const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const config = require('config');
 
+const publicUserSchema = new mongoose.Schema({
+    firstName:  { type: String, minlength: 4, required: true },
+    lastName:   { type: String, minlength: 4, required: true },
+    email:      { type: String, minlength: 11, required: true }
+});
+
 const userSchema = new mongoose.Schema({
     firstName:  { type: String, minlength: 4, required: true },
     lastName:   { type: String, minlength: 4, required: true },
@@ -34,4 +40,5 @@ const validateUser = (user) => {
 }
 
 exports.User = User;
+exports.publicUserSchema = publicUserSchema;
 exports.validateUser = validateUser;

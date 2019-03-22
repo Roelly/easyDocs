@@ -1,4 +1,5 @@
 const request = require('supertest');
+const { getToken } = require('./test-methods');
 const { User } = require('../../models/users');
 
 let server, token;
@@ -6,13 +7,7 @@ let server, token;
 describe('auth middleware', () => {
     beforeEach( async () => {
         server = require('../../Server');
-        await User.collection.insertMany([  // update test-db
-            { firstName: 'Test1', lastName: 'Test1', email: 'test1@easydocs.com', password: '123412341234'},
-            { firstName: 'Test2', lastName: 'Test2', email: 'test2@easydocs.com', password: '123412341234'}
-        ]);
-
-        const user = await User.findOne({ email: 'test1@easydocs.com'}); //query user
-        token = await user.generateAuthToken(); //generate token
+        token = await getToken();
     });
     afterEach( async () => {
         await User.deleteMany({});
@@ -24,6 +19,7 @@ describe('auth middleware', () => {
         let exec = async () => {
             return await request(server).get('/api/user').set('x-auth-token', token);
         }
+        
         it('should return 200 if token is valid', async () => {
             const res = await exec();
 

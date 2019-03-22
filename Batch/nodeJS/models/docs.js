@@ -1,30 +1,35 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 
-const userSchema = new mongoose.Schema({
-    firstName:  { type: String, minlength: 4, required: true },
-    lastName:   { type: String, minlength: 4, required: true },
-    email:      { type: String, minlength: 11, required: true }
-});
+const { publicUserSchema } = require('../models/users');
+const { typeSchema } = require('../models/types');
+const { clientSchema } = require('../models/clients');
 
 const docSchema = new mongoose.Schema({
-    title:          { type: String, minlength: 4, required: true },
+    title:          { type: String, minlength: 3, required: true },
     body:           { type: String, minlength: 25, required: true },
-    type:           { type: String, minlength: 4, required: true },
+    type:           { type: typeSchema, required: true },
+    client:         { type: clientSchema },
     date:           { type: Date, default: Date.now() },
+    isOutdated:     { type: Boolean, default: false }, //will be handled on frontend
     modified:       { type: Date },
-    user:           { type: userSchema },
-    modified_user:  { type: userSchema }
+    user:           { type: publicUserSchema, required: true },
+    modified_user:  { type: publicUserSchema },
+    checkCount:     { type: Number, default: 0 },
+    checkedBy:      { type: Array, default: [] }
 })
+// outdated
 
-const Document = mongoose.Schema('documents', docSchema);
+const Document = mongoose.model('documents', docSchema);
 
 const validateDoc = function(doc){
-    const schema = {
+    const schema = {    // date, modif, isvalid, validuntil
         title : Joi.string().required().min(4),
         body: Joi.string().required().min(25),
-        type: Joi.string().required().min(4),
-        userId : Joi.objectId().required()
+        typeID: Joi.string().required(),
+        clientID: Joi.string().required(),
+        userID : Joi.string().required(),
+        modified: Joi.date()
     };
     return Joi.validate(doc, schema);
 }

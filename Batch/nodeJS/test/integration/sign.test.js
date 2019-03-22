@@ -1,23 +1,14 @@
 const request = require('supertest');
 const { User } = require('../../models/users');
+const { getToken, populateDB } = require('./test-methods');
 
-const bcrypt = require('bcrypt');
-
-let user, email, password ,server;
+let email, password ,server;
+let token = getToken();;
 
 describe('/api/sign', () => {
     beforeEach(async () => {
         server = require('../../Server');   // connecting to server 
-        const password = '123412341234';    // creating user
-        const salt = await bcrypt.genSalt(10);
-        const pass =  await bcrypt.hash(password,salt);
-        user = new User({
-            email: "test@easydocs.com",
-            firstName: "test",
-            lastName: "test",
-            password: pass
-        });
-        await user.save();
+        await populateDB();
     });
     afterEach( async () => {
         await User.deleteMany({});  //deleting from test-db
@@ -25,19 +16,16 @@ describe('/api/sign', () => {
     })
 
     describe('POST / sign in', ()=> {
-        let token;
         beforeEach(async () => {
-            email = "test@easydocs.com";  //setting up valid email and pw
-            password = "123412341234";
-            token = await user.generateAuthToken();
+            email = "test1@easydocs.com";  //setting up valid email and pw
+            password = "12345678";
         })
         
-        const exec = async () => {
-
-            return await request(server).
-                        post('/api/sign').
-                        send({ email: email, password: password}).
-                        set('x-auth-token', token);
+        const exec = async () => {         // Factory function for HTTP request
+                        return await request(server).
+                                    post('/api/sign').
+                                    send({ email: email, password: password}).
+                                    set('x-auth-token', token);
         }
 
         it('Should return 400 in case the email is invalid', async () => {
