@@ -1,5 +1,0 @@
-{
-    "db": "mongodb://localhost/batch",
-    "jwt": "batchsupport1"
-
-}
