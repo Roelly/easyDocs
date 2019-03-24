@@ -18,7 +18,6 @@ const docSchema = new mongoose.Schema({
     checkCount:     { type: Number, default: 0 },
     checkedBy:      { type: Array, default: [] }
 })
-// outdated
 
 const Document = mongoose.model('documents', docSchema);
 
@@ -26,9 +25,8 @@ const validateDoc = function(doc){
     const schema = {    // date, modif, isvalid, validuntil
         title : Joi.string().required().min(4),
         body: Joi.string().required().min(25),
-        typeID: Joi.string().required(),
-        clientID: Joi.string().required(),
-        userID : Joi.string().required(),
+        typeID: Joi.objectId().required(),
+        clientID: Joi.objectId().required(),
         modified: Joi.date()
     };
     return Joi.validate(doc, schema);

@@ -1,6 +1,9 @@
+/**
+ * @jest-environment node
+ */
+
 const request = require('supertest');
 const { getToken } = require('./test-methods');
-const { User } = require('../../models/users');
 
 let server, token;
 
@@ -10,14 +13,13 @@ describe('auth middleware', () => {
         token = await getToken();
     });
     afterEach( async () => {
-        await User.deleteMany({});
         await server.close();
     })
 
     describe('POST /', () => {
 
         let exec = async () => {
-            return await request(server).get('/api/user').set('x-auth-token', token);
+            return await request(server).get('/api/users').set('x-auth-token', token);
         }
         
         it('should return 200 if token is valid', async () => {

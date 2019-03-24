@@ -8,8 +8,8 @@ const { clientSchema } = require('./clients');
 const msgSchema = new mongoose.Schema({
     title:      { type: String, minlength: 4, required: true },
     body:       { type: String, minlength: 10, required: true },
-    user:       { type: publicUserSchema },
-    client:     { type: clientSchema },
+    user:       { type: publicUserSchema }, //required
+    client:     { type: clientSchema }, //required
     date:       { type: Date, default: Date.now() },
     modified:   { type: Date },
     valid:      { type: Date },
@@ -22,8 +22,7 @@ const validateMsg = function(msg){
     const schema = { 
         title: Joi.string().min(4).required(),
         body: Joi.string().min(10).required(),
-        userID: Joi.string().required(),
-        clientID: Joi.string().required(),
+        clientID: Joi.objectId().required(),
         modified: Joi.date(),
         valid: Joi.date()
     };

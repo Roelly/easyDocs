@@ -1,17 +1,20 @@
+/**
+ * @jest-environment node
+ */
+
 const request = require('supertest');
-const { User } = require('../../models/users');
-const { getToken, populateDB } = require('./test-methods');
+const { getToken, populateDB, deleteFromDB } = require('./test-methods');
 
 let email, password ,server;
 let token = getToken();;
 
 describe('/api/sign', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         server = require('../../Server');   // connecting to server 
         await populateDB();
     });
-    afterEach( async () => {
-        await User.deleteMany({});  //deleting from test-db
+    afterAll( async () => {
+        await deleteFromDB();       //deleting from test-db
         await server.close();       //closing connection
     })
 
@@ -19,15 +22,13 @@ describe('/api/sign', () => {
         beforeEach(async () => {
             email = "test1@easydocs.com";  //setting up valid email and pw
             password = "12345678";
-        })
-        
+        });
         const exec = async () => {         // Factory function for HTTP request
                         return await request(server).
                                     post('/api/sign').
                                     send({ email: email, password: password}).
                                     set('x-auth-token', token);
-        }
-
+        };
         it('Should return 400 in case the email is invalid', async () => {
             email = 'invalidemail';
             const res = await exec();

@@ -1,68 +1,46 @@
-const request = require('supertest');
-const { Document } = require('../../models/docs');
-const { User } = require('../../models/users');
-const { populateDB_docs, populateDB, getToken } = require('./test-methods');
+/**
+ * @jest-environment node
+ */
 
-let server, token;
+const request = require('supertest');
+const { populateDB_docs, populateDB, getToken, deleteFromDB } = require('./test-methods');
 
 describe('api/docs', () => {
-    beforeEach( async () => {
+    let body, server, token = getToken();
+    beforeAll( async () => {
         server = require('../../Server');
-        token = await getToken();
+        await populateDB_docs();
+        await populateDB();
     });
-    afterEach(async () => {
-        await Document.deleteMany({});
+    afterAll(async () => {
+        await deleteFromDB();
         await server.close();
     })
-    describe('GET /', () => {
-        let id;
-        beforeEach(async () => {
-            await populateDB_docs();
-            const doc = await Document.findOne({ title: "SB37" });
-            id = '/' + doc._id;
-        })
-        const exec = async () => {  // factory function
-            return await request(server).get('/api/docs'+id).set('x-auth-token',token);
-        };
-
-        it('Should return 200 if all document is found', async () => {
-            id = '';
-            const res = await exec();
-
-            expect(res.status).toBe(200);
-            expect(res.body.some(doc => doc.title === 'SB37')).toBeTruthy();
-            expect(res.body.some(doc => doc.title === 'IPL')).toBeTruthy();
+    describe('GET / :client/:type', () => {
+        let type;
+        beforeEach( async () => {
+            
+            type = 'company1/errc';
         });
+
+        const exec = async () => {
+            return await request(server).get('/api/docs/'+ type).set('x-auth-token',token);
+        }
+
         it('Should return 200 if document id is valid', async () => {
             const res = await exec();
 
             expect(res.status).toBe(200);
-            expect(res.body).toHaveProperty("title");
-            expect(res.body).toHaveProperty("body");
+            expect(res.body.length).toBe(2);
         });
-        it('Should return 404 if document id is invalid', async () => {
-            id = id.replace(/[^W]/,'0');    //change a character in the objectid
-            const res = await exec();
-            
-            expect(res.status).toBe(404);
-        });
-        it('Should return 404 if document id is invalid', async () => {
-            id = '1';    //change a character in the objectid
-            const res = await exec();
+        it('Should return 404 if document no document was found', async () => {
+            type = 'company1/rc';
+            const res = await request(server).get('/api/docs/erc').set('x-auth-token',token)
             
             expect(res.status).toBe(404);
         });
     });
-    let body, user;
-    describe('POST /', () => {
-        
-        beforeEach( async () => {
-            await populateDB();
-            user = await User.findOne({ email: 'test2@easydocs.com'});
-        })
-        afterEach( async () => {
-            await User.deleteMany({});
-        })
+    describe('POST /', () => { 
         const exec = async () => {
             return await request(server).
             post('/api/docs').
@@ -71,14 +49,14 @@ describe('api/docs', () => {
                 title: 'OJCV',
                 body: body,
                 typeID: '5c94c238ca26cf0d6c86e34f',
-                clientID: '5c94c21bca26cf0d6c86e34d',
-                userID: user._id
+                clientID: '5c94c21bca26cf0d6c86e34d'
             });
-        }
+        };
         it('Should return 200 if document was uploaded successfully', async () => {
             body = 'Variable substitution has failed, it must be checked and corrected';
 
             const res = await exec();
+            
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('title');
             expect(res.body).toHaveProperty('type');
@@ -90,6 +68,6 @@ describe('api/docs', () => {
             const res = await exec();
 
             expect(res.status).toBe(400);
-        })
+        });
     });
 });
