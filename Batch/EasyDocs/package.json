@@ -1,0 +1,39 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "back-end service for easyDocs",
+  "main": "Server.js",
+  "scripts": {
+    "test": "jest --watchAll --verbose --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roelly/easyDocs.git"
+  },
+  "keywords": [
+    "easyDocs"
+  ],
+  "author": "Roelly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Roelly/easyDocs/issues"
+  },
+  "homepage": "https://github.com/Roelly/easyDocs#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "config": "^3.0.1",
+    "express": "^4.16.4",
+    "express-async-errors": "^3.1.1",
+    "joi": "^14.3.1",
+    "joi-objectid": "^2.0.0",
+    "jsonwebtoken": "^8.5.0",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.4.19",
+    "winston": "^2.4.0",
+    "winston-mongodb": "^3.0.0"
+  },
+  "devDependencies": {
+    "jest": "^24.5.0",
+    "supertest": "^4.0.2"
+  }
+}
